@@ -1,19 +1,22 @@
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button, Checkbox, message, Result } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import showError from '../utils/showError';
 import api from '../utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
+  const location:{state:any} = useLocation(); //location->state->newSignedUp:boolean?
+  // location:{state?:any}
+  console.log(location);
 
   const onFinish = async (values: any) => {
     console.log('Received values of form: ', values);
     try{
-      message.loading("In progress");
+      message.loading("In progress", 0);
       await api.post("/auth/local", values);
       message.destroy();
-      message.success("Registration Successful!");
+      message.success("Login Successful!");
       navigate("/homepage");
     }catch(error){
       console.log(error);
@@ -33,7 +36,16 @@ function Login() {
       initialValues={{ remember: true }}
       onFinish={onFinish}
     >
-      <h1 style={{textAlign:"center", margin:"0.8rem auto"}}>Register</h1>
+      <h1 style={{textAlign:"center", margin:"0.8rem auto"}}>Login</h1>
+      {/* {location.state?.newSignUp==true && <p>Register Successful! Please login using your credentials.</p>} */}
+      {location.state?.newSignUp==true && 
+        <Result
+        status="success"
+        title="Successfully Registered!"
+        subTitle="Please login using your credentials."
+      />
+      }
+      
       <Form.Item
         name="identifier"
         rules={[{ required: true, message: 'Please input your E-mail!' }]}

@@ -91,7 +91,7 @@ const SignUp = () => {
       await api.post("/auth/local/register", values);
       message.destroy();
       message.success("Registration Successful!");
-      navigate("/login");
+      navigate("/login", { state: {newSignUp: true} });
  
     }catch(error:any){
       message.destroy();
